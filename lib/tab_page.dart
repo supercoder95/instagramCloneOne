@@ -32,7 +32,7 @@ class _TabPageState extends State<TabPage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.search), title: Text('Search')),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle), title: Text('Accounts')),
+              icon: Icon(Icons.account_circle), title: Text('Account')),
         ],
       ),
     );
