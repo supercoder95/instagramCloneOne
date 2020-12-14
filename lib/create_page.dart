@@ -14,6 +14,12 @@ class _CreatePageState extends State<CreatePage> {
   }
 
   _buildAppbar() {
-
+    return AppBar(
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.send),
+        )
+      ],
+    );
   }
 }
