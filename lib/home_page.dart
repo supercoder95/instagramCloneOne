@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
                           width: 80.0,
                           height: 80.0,
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage('https://i.ytimg.com/vi/vIYsL8C-va8/maxresdefault.jpg'),
+                            backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg'),
                           ),
                         ),
                         Padding(padding: EdgeInsets.all(8.0),),
@@ -60,7 +60,7 @@ class HomePage extends StatelessWidget {
                             SizedBox(
                               width: 70.0,
                               height: 70.0,
-                              child: Image.network('https://tv-date.com/img/Wataten-An-Angel-Flew-Down-to-Me.jpg',
+                              child: Image.network('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
                               fit: BoxFit.cover,
                               ),
                             ),
@@ -68,7 +68,7 @@ class HomePage extends StatelessWidget {
                             SizedBox(
                               width: 70.0,
                               height: 70.0,
-                              child: Image.network('https://i.pinimg.com/originals/74/9a/ba/749aba74870ce0f94326b5a78b4b80f2.jpg',
+                              child: Image.network('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
                               fit: BoxFit.cover,
                               ),
                             ),
@@ -76,7 +76,7 @@ class HomePage extends StatelessWidget {
                             SizedBox(
                               width: 70.0,
                               height: 70.0,
-                              child: Image.network('https://yurireviewsandmore.files.wordpress.com/2019/04/wataten-4.jpg',
+                              child: Image.network('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
                               fit: BoxFit.cover,
                               ),
                             ),
