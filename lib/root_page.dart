@@ -22,7 +22,7 @@ class RootPage extends StatelessWidget {
           if (snapshot.hasData) {
             return TabPage(snapshot.data);
           }
-          return LoginPage();
+            return LoginPage();
         }
       },
     );
