@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AccountPage extends StatefulWidget {
+  final FirebaseUser user;
+
+  AccountPage(this.user);
+
   @override
   _AccountPageState createState() => _AccountPageState();
 }
 
 class _AccountPageState extends State<AccountPage> {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +27,10 @@ class _AccountPageState extends State<AccountPage> {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.exit_to_app),
-          onPressed: () {  },
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+            _googleSignIn.signOut();
+          },
         )
       ],
     );
@@ -40,7 +51,7 @@ class _AccountPageState extends State<AccountPage> {
                     width: 80.0,
                     height: 80.0,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage('https://i.ytimg.com/vi/vIYsL8C-va8/maxresdefault.jpg'),
+                      backgroundImage: NetworkImage(widget.user.photoUrl),
                     ),
                   ),
                   Container(
@@ -75,7 +86,7 @@ class _AccountPageState extends State<AccountPage> {
                Padding(
                  padding: EdgeInsets.all(8.0),
                ),
-               Text('이름',
+               Text(widget.user.displayName,
                style: TextStyle(
                  fontWeight: FontWeight.bold,
                  fontSize: 18.0
