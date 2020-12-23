@@ -1,6 +1,6 @@
 # instagram_clone
 
-A new Flutter application.
+인프런을 보고 공부한 플러터 앱입니다.
 
 ## Getting Started
 
