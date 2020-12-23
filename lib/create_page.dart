@@ -1,9 +1,16 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreatePage extends StatefulWidget {
+  final User user;
+
+  CreatePage(this.user);
+
   @override
   _CreatePageState createState() => _CreatePageState();
 }
@@ -11,14 +18,14 @@ class CreatePage extends StatefulWidget {
 class _CreatePageState extends State<CreatePage> {
   final textEditingController = TextEditingController();
 
-  File _image;
-
   @override
   void dispose() {
     textEditingController.dispose();
     super.dispose();
   }
-  
+
+  File _image;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +44,32 @@ class _CreatePageState extends State<CreatePage> {
         IconButton(
           icon: Icon(Icons.send),
           onPressed: (){
+            final firebaseStorageRef = FirebaseStorage.instance
+                .ref()
+                .child('post')
+                .child('${DateTime
+                .now()
+                .millisecondsSinceEpoch}.png');
+
+            final task = firebaseStorageRef.putFile(
+            _image, SettableMetadata(contentType: 'image/png')
+            );
+
+            task.then((TaskSnapshot snapshot){
+              var downloadUrl=snapshot.ref.getDownloadURL();
+
+              downloadUrl.then((uri){
+                var doc = FirebaseFirestore.instance.collection('post').doc();
+                doc.set({
+                  'id': doc.id,
+                  'photoUrl': uri.toString(),
+                  'contents': textEditingController.text,
+                  'email':widget.user.email,
+                  'displayName':widget.user.displayName,
+                  'userPhotoUrl':widget.user.photoURL
+                });
+              });
+            }).then((value) => Navigator.pop(context));
 
           },
         )
@@ -45,23 +78,40 @@ class _CreatePageState extends State<CreatePage> {
   }
 
   Widget _buildBody() {
-    return Column(
-      children: <Widget>[
-        _image == null ? Text('No Image') : Image.file(_image),
-        TextField(
-          decoration: InputDecoration(hintText: '내용을 입력하세요'),
-          controller: textEditingController,
-        )
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          _image == null ? Text('No Image') : Image.file(_image),
+          TextField(
+            decoration: InputDecoration(hintText: '내용을 입력하세요'),
+            controller: textEditingController,
+          )
+        ],
+      ),
     );
   }
 
-  Future<void> _getImage() async {
-    var image = await ImagePicker.pickImage(
-        source: ImageSource.gallery
-    );
+  final picker = ImagePicker();
+
+  Future _getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
     setState(() {
-      _image = image;
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
     });
   }
+
+  //
+  // Future<void> _getImage() async {
+  //   File image = await ImagePicker.pickImage(
+  //       source: ImageSource.gallery
+  //   );
+  //   setState(() {
+  //     _image = image;
+  //   });
+  // }
 }

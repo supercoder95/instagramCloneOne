@@ -5,7 +5,7 @@ import 'package:instagram_clone/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class TabPage extends StatefulWidget {
-  final FirebaseUser user;
+  final User user;
 
   TabPage(this.user);
 
@@ -24,7 +24,7 @@ class _TabPageState extends State<TabPage> {
     super.initState();
     _pages = [
       HomePage(widget.user),
-      SearchPage(),
+      SearchPage(widget.user),
       AccountPage(widget.user),
     ];
   }

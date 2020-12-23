@@ -1,8 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:instagram_clone/detail_post_page.dart';
 
 import 'create_page.dart';
 
 class SearchPage extends StatefulWidget {
+  final User user;
+
+  SearchPage(this.user);
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -15,7 +23,7 @@ class _SearchPageState extends State<SearchPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           Navigator.push(context, MaterialPageRoute(
-            builder: (context) => CreatePage()
+            builder: (context) => CreatePage(widget.user)
           ));
         },
         child: Icon(Icons.create),
@@ -25,23 +33,50 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   _buildBody() {
-    return GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 3,
-      childAspectRatio: 1.0,
-      mainAxisSpacing: 1.0,
-      crossAxisSpacing: 1.0
-    ),
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        return _buildListItem(context, index);
-      }
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('post').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        var items = snapshot.data.docs ?? [];
+
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 1.0,
+            mainAxisSpacing: 1.0,
+            crossAxisSpacing: 1.0
+          ),
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            return _buildListItem(context, items[index]);
+          },
+        );
+
+      },
+
     );
   }
 
-  _buildListItem(BuildContext context, int index) {
-    return Image.network(
-      'https://i.ytimg.com/vi/vIYsL8C-va8/maxresdefault.jpg',
-      fit: BoxFit.cover,
+  _buildListItem(context,  doc) {
+    return Hero(
+      tag: doc['photoUrl'],
+      child: Material(
+        child: InkWell(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            DetailPostPage(doc)
+            ));
+          },
+        child: Image.network(
+          doc['photoUrl'],
+          fit: BoxFit.cover,
+        ),
+       ),
+      ),
     );
   }
 }
